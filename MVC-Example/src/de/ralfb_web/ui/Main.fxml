@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="364.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ralfb_web.ui.MainController">
+<VBox prefHeight="413.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ralfb_web.ui.MainController">
    <children>
       <HBox alignment="CENTER" prefHeight="40.0" prefWidth="478.0">
          <children>
@@ -39,6 +39,14 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
          <children>
+            <TextField fx:id="sid" prefHeight="30.0" prefWidth="350.0" promptText="Database SID" />
+         </children>
+         <VBox.margin>
+            <Insets left="15.0" right="5.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
+         <children>
             <TextField fx:id="user" prefHeight="30.0" prefWidth="350.0" promptText="DB User" />
          </children>
          <VBox.margin>
@@ -63,8 +71,8 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
          <children>
-            <Button fx:id="connectDB" mnemonicParsing="false" text="Connect Database" />
-            <Button fx:id="exit" mnemonicParsing="false" text="EXIT">
+            <Button fx:id="connectDB" mnemonicParsing="false" onAction="#connectButtonTapped" text="Connect Database" />
+            <Button fx:id="exit" mnemonicParsing="false" onAction="#exitButtonTapped" text="EXIT">
                <HBox.margin>
                   <Insets left="270.0" />
                </HBox.margin>

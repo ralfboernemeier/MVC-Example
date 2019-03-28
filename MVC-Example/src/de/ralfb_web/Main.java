@@ -57,6 +57,9 @@ public class Main extends Application {
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("MVC Example");
+			primaryStage.setOnCloseRequest(event -> {
+				System.out.println("Application closed.");
+			});
 			primaryStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
