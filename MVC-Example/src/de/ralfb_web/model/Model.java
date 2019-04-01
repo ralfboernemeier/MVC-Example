@@ -1,5 +1,8 @@
 package de.ralfb_web.model;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 /**
  * 
  * @author Ralf Boernemeier
@@ -16,7 +19,7 @@ public class Model {
 	private String password;
 	private String sid;
 	private String dbConnectString;
-
+	private StringProperty dbVersionProperty = new SimpleStringProperty();
 
 	/**
 	 * Constructor
@@ -84,6 +87,14 @@ public class Model {
 	
 	public void setDbConnectString() {
 		this.dbConnectString = "jdbc:oracle:thin:@" + this.getHost() + ":" + this.getPort() + "/" + this.getSid();
+	}
+	
+	public StringProperty getDbVersionProperty() {
+		return dbVersionProperty;
+	}
+	
+	public void setDbVersionProperty(String dbVersion) {
+		dbVersionProperty.set(dbVersion);
 	}
 
 }
