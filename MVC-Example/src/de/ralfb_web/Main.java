@@ -4,6 +4,7 @@ import de.ralfb_web.model.Model;
 import de.ralfb_web.services.DAOService;
 import de.ralfb_web.utils.ControllerFactory;
 import de.ralfb_web.utils.ViewLoader;
+
 import javafx.application.Application;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
@@ -37,7 +38,7 @@ public class Main extends Application {
 	 * Application class, which does nothing.
 	 */
 	@Override
-	public void init() throws Exception {
+	public void init() {
 		// Print the id's of the objects that will be injected to the MainController
 		System.out.println("Main Class: Model Object: " + model);
 		System.out.println("Main Class: DAO Object: " + dao);
@@ -59,6 +60,7 @@ public class Main extends Application {
 			primaryStage.setTitle("MVC Example");
 			primaryStage.setOnCloseRequest(event -> {
 				System.out.println("Application closed.");
+				dao.removeExceptionListener();
 			});
 			primaryStage.show();
 		} catch (Exception e) {
