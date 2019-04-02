@@ -20,6 +20,7 @@ public class Model {
 	private String sid;
 	private String dbConnectString;
 	private StringProperty dbVersionProperty = new SimpleStringProperty();
+	private StringProperty jdbcDriverVersionProperty = new SimpleStringProperty();
 
 	/**
 	 * Constructor
@@ -94,7 +95,16 @@ public class Model {
 	}
 	
 	public void setDbVersionProperty(String dbVersion) {
-		dbVersionProperty.set(dbVersion);
+		this.dbVersionProperty.set(dbVersion);
+	}
+	
+	public StringProperty getJdbcDriverVersionProperty() {
+		return jdbcDriverVersionProperty;
+	}
+
+
+	public void setJdbcDriverVersionProperty(String jdbcDriverVersion) {
+		this.jdbcDriverVersionProperty.set(jdbcDriverVersion);
 	}
 
 }

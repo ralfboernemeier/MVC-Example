@@ -1,6 +1,7 @@
 package de.ralfb_web.services;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ public class DAOService {
 	 */
 	private ExceptionListener exceptionListener;
 	private String dbVersionInfo;
+	private String jdbcDriverVersionInfo;
 
 	/**
 	 * Constructor
@@ -50,32 +52,6 @@ public class DAOService {
 		}
 	}
 
-	/**
-	 * Method to close a given database connection
-	 * 
-	 * @param conn Connection to be closed
-	 */
-	public void closeConnection(Connection conn) {
-		try {
-			conn.close();
-		} catch (Exception ex) {
-			fireException(ex);
-		}
-	}
-
-	/**
-	 * Method to close a give database statement
-	 * 
-	 * @param stmt Statement to be closed
-	 */
-	public void closeStatement(Statement stmt) {
-		try {
-			stmt.close();
-		} catch (Exception ex) {
-			fireException(ex);
-		}
-	}
-
 	public String getDbVersionInfo(String dbConnectString, String dbUserId, String dbPassword) {
 		try {
 			Connection conn = DriverManager.getConnection(dbConnectString, dbUserId, dbPassword);
@@ -92,5 +68,17 @@ public class DAOService {
 			return null;
 		}
 		return dbVersionInfo;
+	}
+	
+	public String getJdbcDriverVersionInfo(String dbConnectString, String dbUserId, String dbPassword) {
+		try {
+			Connection conn = DriverManager.getConnection(dbConnectString, dbUserId, dbPassword);
+			DatabaseMetaData metaData = conn.getMetaData();
+			jdbcDriverVersionInfo = metaData.getDriverVersion();
+		} catch (SQLException ex) {
+			fireException(ex);
+			return null;
+		}
+		return jdbcDriverVersionInfo;
 	}
 }

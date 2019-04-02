@@ -71,30 +71,45 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 		// model
 		host.textProperty().addListener((observable, oldValue, newValue) -> {
 			model.setHost(newValue);
+			model.setDbConnectString();
 		});
 
 		port.textProperty().addListener((observable, oldValue, newValue) -> {
 			model.setPort(newValue);
+			model.setDbConnectString();
 		});
 
 		sid.textProperty().addListener((observable, oldValue, newValue) -> {
 			model.setSid(newValue);
+			model.setDbConnectString();
 		});
 
 		user.textProperty().addListener((observable, oldValue, newValue) -> {
 			model.setUser(newValue);
+			model.setDbConnectString();
 		});
 
 		password.textProperty().addListener((observable, oldValue, newValue) -> {
 			model.setPassword(newValue);
+			model.setDbConnectString();
 		});
 
-		// Add Listener to the dbVersionProperty of the Model
+		// Add Listener to the dbVersionProperty of the Model class
 		model.getDbVersionProperty().addListener(new InvalidationListener() {
 
 			@Override
 			public void invalidated(Observable arg0) {
-				messages.appendText("New Database Connection.\nVersion: " + model.getDbVersionProperty().getValue() + "\n");
+				messages.appendText(
+						"New Database Connection.\nVersion: " + model.getDbVersionProperty().getValue() + "\n");
+			}
+		});
+
+		// Add Listener to the jdbcDriverVersionProperty of the Model class
+		model.getJdbcDriverVersionProperty().addListener(new InvalidationListener() {
+
+			@Override
+			public void invalidated(Observable arg0) {
+				messages.appendText("JDBC Driver Version: " + model.getJdbcDriverVersionProperty().getValue() + "\n");
 			}
 		});
 
@@ -144,7 +159,9 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	 * Method that will be executed if the "Connect Database" Button is tapped.
 	 */
 	public void connectButtonTapped() {
-		model.setDbConnectString();
+//		model.setDbConnectString();
+		model.setJdbcDriverVersionProperty(
+				dao.getJdbcDriverVersionInfo(model.getDbConnectString(), model.getUser(), model.getPassword()));
 		model.setDbVersionProperty(
 				dao.getDbVersionInfo(model.getDbConnectString(), model.getUser(), model.getPassword()));
 	}
