@@ -37,4 +37,5 @@ my.package.utils
     ControllerInjectable(Interface)
     ModelInjectable (Interface)
     DAOServiceInjectable (Interface)
+    ExceptionListener (Interface)
 ```
