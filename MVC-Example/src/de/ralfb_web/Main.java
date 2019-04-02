@@ -59,7 +59,6 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setTitle("MVC Example");
 			primaryStage.setOnCloseRequest(event -> {
-				System.out.println("Application closed.");
 				dao.removeExceptionListener();
 			});
 			primaryStage.show();
