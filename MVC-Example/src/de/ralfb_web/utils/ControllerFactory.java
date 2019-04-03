@@ -2,7 +2,6 @@ package de.ralfb_web.utils;
 
 import de.ralfb_web.model.Model;
 import de.ralfb_web.services.DAOService;
-import de.ralfb_web.ui.MainController;
 
 public class ControllerFactory {
 
@@ -17,7 +16,7 @@ public class ControllerFactory {
 	 * @param            <T> Generic
 	 * @return ControllerInstance
 	 */
-	public static <T> T controllerForClass(Class<T> clazz, Model model, DAOService dao, MainController controller) {
+	public static <T> T controllerForClass(Class<T> clazz, Model model, DAOService dao) {
 		try {
 			// controllerInstance#someArbitraryMethodCall if necessary
 			// will be triggered *before* the initialize method!
@@ -26,11 +25,6 @@ public class ControllerFactory {
 			if (ModelInjectable.class.isAssignableFrom(clazz)) {
 				ModelInjectable c = (ModelInjectable) controllerInstance;
 				c.setModel(model);
-			}
-
-			if (ControllerInjectable.class.isAssignableFrom(clazz)) {
-				ControllerInjectable c = (ControllerInjectable) controllerInstance;
-				c.setController(controller);
 			}
 
 			if (DAOServiceInjectable.class.isAssignableFrom(clazz)) {
@@ -46,11 +40,7 @@ public class ControllerFactory {
 	}
 
 	public static <T> T controllerForClass(Class<T> clazz, Model model) {
-		return controllerForClass(clazz, model, null, null);
-	}
-	
-	public static <T> T controllerForClass(Class<T> clazz, Model model, DAOService dao) {
-		return controllerForClass(clazz, model, dao, null);
+		return controllerForClass(clazz, model, null);
 	}
 
 }
