@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.text.*?>
@@ -7,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="413.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ralfb_web.ui.MainController">
+<VBox prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ralfb_web.ui.MainController">
    <children>
       <HBox alignment="CENTER" prefHeight="40.0" prefWidth="478.0">
          <children>
@@ -21,9 +22,53 @@
             <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
          </VBox.margin>
       </HBox>
+      <HBox prefHeight="80.0" prefWidth="200.0">
+         <children>
+            <VBox maxHeight="80.0" maxWidth="365.0" minHeight="80.0" minWidth="365.0" prefHeight="80.0" prefWidth="365.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
+                     <children>
+                        <TextField fx:id="host" prefHeight="30.0" prefWidth="350.0" promptText="IP-Address or Hostname" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
+                     <children>
+                        <TextField fx:id="port" prefHeight="30.0" prefWidth="350.0" promptText="Listener Port" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="80.0" prefWidth="143.0">
+               <children>
+                  <StackPane prefHeight="150.0" prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
+                     </VBox.margin>
+                     <children>
+                        <ProgressIndicator fx:id="pi" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" prefHeight="50.0" prefWidth="50.0" progress="0.0" />
+                        <ImageView fx:id="imageNotOk" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/NotOkGray30.png" />
+                           </image>
+                           <StackPane.margin>
+                              <Insets bottom="16.0" />
+                           </StackPane.margin>
+                        </ImageView>
+                     </children>
+                  </StackPane>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
          <children>
-            <TextField fx:id="host" prefHeight="30.0" prefWidth="350.0" promptText="IP-Address or Hostname" />
+            <TextField fx:id="sid" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="Database SID" />
          </children>
          <VBox.margin>
             <Insets left="15.0" right="5.0" />
@@ -31,23 +76,7 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
          <children>
-            <TextField fx:id="port" prefHeight="30.0" prefWidth="350.0" promptText="Listener Port" />
-         </children>
-         <VBox.margin>
-            <Insets left="15.0" right="5.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
-         <children>
-            <TextField fx:id="sid" prefHeight="30.0" prefWidth="350.0" promptText="Database SID" />
-         </children>
-         <VBox.margin>
-            <Insets left="15.0" right="5.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
-         <children>
-            <TextField fx:id="user" prefHeight="30.0" prefWidth="350.0" promptText="DB User" />
+            <TextField fx:id="user" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="DB User" />
          </children>
          <VBox.margin>
             <Insets left="15.0" right="5.0" />
@@ -58,15 +87,15 @@
             <Insets left="15.0" right="5.0" />
          </VBox.margin>
          <children>
-            <PasswordField fx:id="password" prefHeight="30.0" prefWidth="350.0" promptText="DB User Password" />
+            <PasswordField fx:id="password" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="DB User Password" />
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+      <HBox alignment="CENTER_LEFT" maxHeight="100.0" maxWidth="480.0" minHeight="100.0" minWidth="480.0" prefHeight="100.0" prefWidth="480.0">
          <children>
-            <TextArea fx:id="messages" prefHeight="100.0" prefWidth="450.0" />
+            <TextArea fx:id="messages" prefHeight="100.0" prefWidth="479.0" />
          </children>
          <VBox.margin>
-            <Insets left="15.0" right="5.0" />
+            <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
@@ -74,12 +103,12 @@
             <Button fx:id="connectDB" mnemonicParsing="false" onAction="#connectButtonTapped" text="Connect Database" />
             <Button fx:id="exit" mnemonicParsing="false" onAction="#exitButtonTapped" text="EXIT">
                <HBox.margin>
-                  <Insets left="270.0" />
+                  <Insets left="325.0" />
                </HBox.margin>
             </Button>
          </children>
          <VBox.margin>
-            <Insets left="15.0" />
+            <Insets left="15.0" right="15.0" />
          </VBox.margin>
       </HBox>
    </children>
