@@ -6,8 +6,12 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import javax.sql.DataSource;
 
 import de.ralfb_web.utils.ExceptionListener;
+import oracle.jdbc.pool.OracleDataSource;
 
 public class DAOService {
 
