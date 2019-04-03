@@ -74,6 +74,29 @@ public class DAOService {
 		return dbVersionInfo;
 	}
 	
+	public String getDbVersionInfo2(String user, String passwd, String host, int port, String sid) {
+		try {
+			DataSourceOracle dso = new DataSourceOracle(user, passwd, host, port, sid);
+			Connection conn = dso.getOracleDataSource().getConnection();
+			String queryGetDbVersion = "select banner from v$version where banner like '%Oracle%'";
+			Statement stmtQueryGetDbVersion = conn.createStatement();
+			ResultSet rsetGetDbVersion = stmtQueryGetDbVersion.executeQuery(queryGetDbVersion);
+			if (rsetGetDbVersion.next()) {
+				dbVersionInfo = rsetGetDbVersion.getString("BANNER");
+			}
+			rsetGetDbVersion.close();
+			rsetGetDbVersion = null;
+			stmtQueryGetDbVersion.close();
+			stmtQueryGetDbVersion = null;
+			conn.close();
+			conn = null;
+		} catch (SQLException ex) {
+			fireException(ex);
+			return null;
+		}
+		return dbVersionInfo;
+	}
+	
 	public String getJdbcDriverVersionInfo(String dbConnectString, String dbUserId, String dbPassword) {
 		try {
 			Connection conn = DriverManager.getConnection(dbConnectString, dbUserId, dbPassword);

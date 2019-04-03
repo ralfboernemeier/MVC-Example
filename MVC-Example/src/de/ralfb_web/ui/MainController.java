@@ -1,7 +1,13 @@
 package de.ralfb_web.ui;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import de.ralfb_web.model.Model;
 import de.ralfb_web.services.DAOService;
+import de.ralfb_web.services.DataSourceOracle;
 import de.ralfb_web.utils.DAOServiceInjectable;
 import de.ralfb_web.utils.ExceptionListener;
 import de.ralfb_web.utils.ModelInjectable;
@@ -11,8 +17,10 @@ import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -141,6 +149,12 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 
 	@FXML
 	TextField password;
+	
+	@FXML
+	ProgressIndicator pi;
+	
+	@FXML
+	ImageView imageNotOk = new ImageView();
 
 	/**
 	 * Method that will be executed if the exit Button was clicked. This Method will
@@ -160,10 +174,28 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	 */
 	public void connectButtonTapped() {
 //		model.setDbConnectString();
-		model.setJdbcDriverVersionProperty(
-				dao.getJdbcDriverVersionInfo(model.getDbConnectString(), model.getUser(), model.getPassword()));
-		model.setDbVersionProperty(
-				dao.getDbVersionInfo(model.getDbConnectString(), model.getUser(), model.getPassword()));
+//		model.setJdbcDriverVersionProperty(
+//				dao.getJdbcDriverVersionInfo(model.getDbConnectString(), model.getUser(), model.getPassword()));
+//		model.setDbVersionProperty(
+//				dao.getDbVersionInfo(model.getDbConnectString(), model.getUser(), model.getPassword()));
+		
+//		String dbVersionInfo = null;
+//		DataSourceOracle dso = new DataSourceOracle(model);
+//		try {
+//			Connection conn = dso.getOracleDataSource().getConnection();
+//			String queryGetDbVersion = "select banner from v$version where banner like '%Oracle%'";
+//			Statement stmtQueryGetDbVersion = conn.createStatement();
+//			ResultSet rsetGetDbVersion = stmtQueryGetDbVersion.executeQuery(queryGetDbVersion);
+//			if (rsetGetDbVersion.next()) {
+//				dbVersionInfo = rsetGetDbVersion.getString("BANNER");
+//			}
+//			System.out.println(dbVersionInfo);
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		model.setDbVersionProperty(dao.getDbVersionInfo2(model.getUser(), model.getPassword(), model.getHost(), Integer.parseInt(model.getPort()), model.getSid()));	
 	}
 
 }
