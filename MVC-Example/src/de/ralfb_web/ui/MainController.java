@@ -1,13 +1,7 @@
 package de.ralfb_web.ui;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 import de.ralfb_web.model.Model;
 import de.ralfb_web.services.DAOService;
-import de.ralfb_web.services.DataSourceOracle;
 import de.ralfb_web.utils.DAOServiceInjectable;
 import de.ralfb_web.utils.ExceptionListener;
 import de.ralfb_web.utils.ModelInjectable;

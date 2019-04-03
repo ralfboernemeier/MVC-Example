@@ -2,12 +2,10 @@ package de.ralfb_web.services;
 
 import java.sql.SQLException;
 
-import de.ralfb_web.model.Model;
 import oracle.jdbc.pool.OracleDataSource;
 
 public class DataSourceOracle {
 
-	private Model model;
 	private OracleDataSource ods;
 	private String user;
 	private String passwd;
