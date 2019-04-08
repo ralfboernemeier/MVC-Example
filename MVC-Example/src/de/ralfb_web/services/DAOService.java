@@ -20,8 +20,6 @@ public class DAOService {
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet rset;
-	
-	
 
 	/**
 	 * Constructor
@@ -66,7 +64,7 @@ public class DAOService {
 				conn = dso.getOracleDataSource().getConnection();
 				queryGetDbVersion = "select banner from v$version where banner like '%Oracle%'";
 				break;
-				
+
 			case "MySQL":
 				DataSourceMySQL dsm = new DataSourceMySQL(user, passwd, host, port, sid);
 				conn = dsm.getMysqlDataSource().getConnection();
@@ -82,41 +80,16 @@ public class DAOService {
 			if (rset.next()) {
 				dbVersionInfo = rset.getString(1);
 			}
-			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\nOracle Database Version: " + dbVersionInfo;
+			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\nDatabase Version: " + dbVersionInfo;
 		} catch (SQLException ex) {
 			fireException(ex);
 			return null;
-		}
-		finally {
+		} finally {
 			close();
 		}
 		return versionInfos;
 	}
-		
-	public String getMySqlVersion(String user, String passwd, String host, int port, String db) {
-		try {
-			DataSourceMySQL dsm = new DataSourceMySQL(user, passwd, host, port, db);
-			conn = dsm.getMysqlDataSource().getConnection();
-			DatabaseMetaData metaData = conn.getMetaData();
-			jdbcDriverVersionInfo = metaData.getDriverVersion();
-			String querygetMySqlVersion = "SELECT VERSION()";
-			Statement stmt = conn.createStatement();
-			ResultSet rset = stmt.executeQuery(querygetMySqlVersion);
-			if (rset.next()) {
-				dbVersionInfo = rset.getString(1);
-			}
-			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\nMySQL Database Version: " + dbVersionInfo;
-			
-		} catch (Exception ex) {
-			fireException(ex);
-			return null;
-		}
-		finally {
-			close();
-		}
-		return versionInfos;
-	}
-	
+
 	public void close() {
 		try {
 			if (rset != null) {
@@ -131,10 +104,10 @@ public class DAOService {
 				conn.close();
 				conn = null;
 			}
-			
+
 		} catch (Exception ex) {
 			fireException(ex);
 		}
-		
+
 	}
 }

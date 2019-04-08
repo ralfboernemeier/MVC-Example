@@ -39,9 +39,7 @@ public class Main extends Application {
 	 */
 	@Override
 	public void init() {
-		// Print the id's of the objects that will be injected to the MainController
-		System.out.println("Main Class: Model Object: " + model);
-		System.out.println("Main Class: DAO Object: " + dao);
+		// Some initialization code can be placed here ...
 	}
 
 	/**

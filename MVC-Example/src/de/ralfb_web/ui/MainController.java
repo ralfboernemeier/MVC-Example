@@ -12,7 +12,9 @@ import javafx.animation.ParallelTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
@@ -33,8 +35,7 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	 */
 	public MainController() {
 		super();
-		serviceWorkerTask1.messageProperty()
-		.addListener((obs, oldMsg, newMsg) -> messages.appendText(newMsg + "\n"));
+		serviceWorkerTask1.messageProperty().addListener((obs, oldMsg, newMsg) -> messages.appendText(newMsg + "\n"));
 	}
 
 	/**
@@ -57,7 +58,7 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	@Override
 	public void exceptionOccurred(Throwable th) {
 		String msg = String.valueOf(th);
-		messages.appendText(msg + "\n");	
+		messages.appendText(msg + "\n");
 	}
 
 	/**
@@ -65,11 +66,6 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	 * the place for Initialization of Nodes.
 	 */
 	public void initialize() {
-		// Check the id of the injected objects to make sure we have the same reference
-		// as in main class
-		System.out.println("MainController Class: Model Object: " + model);
-		System.out.println("MainController Class: DAO Object: " + dao);
-
 		/**
 		 * Register ExceptionListener with DAOService class to get Exceptions from
 		 * DAOService class in Controller for showing in the View.
@@ -106,25 +102,33 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 			model.setPassword(newValue);
 			model.setDbConnectString();
 		});
-		
+
 		// Create a ToggleGroup for the RadioButtons
 		ToggleGroup group = new ToggleGroup();
 		oracle.setToggleGroup(group);
 		oracle.setSelected(true);
 		model.setDbVendor("Oracle");
 		mysql.setToggleGroup(group);
-		
+		sqlite.setToggleGroup(group);
+
 		// Add a ChangeListener to get the value of the selected button in the group.
 		group.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-	           @Override
-	           public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
-	               // Has selection.
-	               if (group.getSelectedToggle() != null) {
-	                   RadioButton button = (RadioButton) group.getSelectedToggle();
-	                   model.setDbVendor(button.getText());
-	               }
-	           }
-	       });
+			@Override
+			public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
+				// Has selection.
+				if (group.getSelectedToggle() != null) {
+					RadioButton button = (RadioButton) group.getSelectedToggle();
+					model.setDbVendor(button.getText());
+				}
+			}
+		});
+
+		// Add a Listener to the BooleanProperty getExceptionOccured.
+		model.getExceptionOccured().addListener((observable, oldValue, newValue) -> {
+			if (newValue) {
+				setFadeTransitionLabelErrorStatus(true);
+			}
+		});
 
 	}
 
@@ -154,19 +158,22 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 
 	@FXML
 	TextField password;
-	
+
 	@FXML
 	ProgressIndicator pi = new ProgressIndicator();
-	
+
 	@FXML
 	ImageView imageNotOk = new ImageView();
-	
+
 	@FXML
 	RadioButton oracle;
-	
+
 	@FXML
 	RadioButton mysql;
-	
+
+	@FXML
+	RadioButton sqlite;
+
 	/**
 	 * Initialize and set FadeTransition Objects. The FadTransition will be used to
 	 * overlay the ProgressIndicator with an image that indicates an error in case
@@ -174,7 +181,7 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	 */
 	FadeTransition fade1 = new FadeTransition(Duration.millis(300), imageNotOk);
 	FadeTransition fade2 = new FadeTransition(Duration.millis(300), pi);
-	
+
 	/**
 	 * Method that set the opacity of the imageNotOK, which indicates an error, to 1
 	 * if boolean error = true. If boolean error = false set opacity of imjageNotOK
@@ -229,20 +236,30 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	/**
 	 * Method that will be executed if the "Connect Database" Button is tapped.
 	 */
+	@SuppressWarnings("unchecked")
 	public void connectButtonTapped() {
 		messages.setText("");
+		// reset excpetionOcuured BooleanProperty in model class
+		model.setExceptionOccured(false);
 		pi.setVisible(true);
 		pi.progressProperty().bind(serviceWorkerTask1.progressProperty());
 		setFadeTransitionLabelErrorStatus(false);
 		if (!serviceWorkerTask1.isRunning()) {
 			serviceWorkerTask1.reset();
+			serviceWorkerTask1.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+				@Override
+				public void handle(WorkerStateEvent t) {
+					messages.setText((String) t.getSource().getValue() + "\n");
+				}
+			});
 			serviceWorkerTask1.start();
 		}
 	}
-	
+
 	/**
-	 * Service serviceWorkerTask1 will be started as a new service.
-	 * Task will get JDBC and Database version info.
+	 * Service serviceWorkerTask1 will be started as a new service. Task will get
+	 * JDBC and Database version info.
 	 * 
 	 */
 	@SuppressWarnings("rawtypes")
@@ -252,20 +269,33 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 		protected Task createTask() {
 			return new Task() {
 				@Override
-				protected Void call() throws Exception {
+				protected String call() throws Exception {
 					// Start entering execution code here ...
-					model.setDbVersionProperty(dao.getDbVersionInfo(model.getDbVendor().getValue(), model.getUser(), model.getPassword(), model.getHost(), Integer.parseInt(model.getPort()), model.getSid()));
-					updateMessage(model.getDbVersionProperty().getValue());
-					// Service end handling
-					if (model.getExceptionOccured().getValue()) {
-						setFadeTransitionLabelErrorStatus(true);
-					} else {
-						updateProgress(1.0, 1.0);
+					model.setDbVersionProperty(dao.getDbVersionInfo(model.getDbVendor().getValue(), model.getUser(),
+							model.getPassword(), model.getHost(), Integer.parseInt(model.getPort()), model.getSid()));
+					if (model.getDbVersionProperty().getValue() == null) {
+						serviceWorkerTask1.onFailedProperty();
 					}
-					// reset excpetionOcuured BooleanProperty in model class
-					model.setExceptionOccured(false);
-					// End entering execution code here ...
-					return null;
+					return model.getDbVersionProperty().getValue();
+				}
+
+				@Override
+				protected void succeeded() {
+					super.succeeded();
+					updateProgress(1.0, 1.0);
+					updateMessage("Done!");
+				}
+
+				@Override
+				protected void cancelled() {
+					super.cancelled();
+					updateMessage("Cancelled!");
+				}
+
+				@Override
+				protected void failed() {
+					super.failed();
+					updateMessage("Failed!");
 				}
 			};
 		}
