@@ -1,8 +1,8 @@
-## Example of a simple JavaFX Application using MVC and DAO pattern
+## Example of a simple JavaFX Application using MVC, DAO patterna dn different DataSources (Oracle, MySQL, SQLite)
 * Simple app to show how to implement:
  * GUI using SceneBuilder
  * Controller/Model Injectable
- * DAO for Oracle database connection
+ * DAO for database connection using different DataSource classes for the database vendors, like Oracle, MySQL and SQlite
  * Strict separation between GUI and Model/DAO
  
 ### The Model-View-Controller design pattern (MVC Design Pattern)
