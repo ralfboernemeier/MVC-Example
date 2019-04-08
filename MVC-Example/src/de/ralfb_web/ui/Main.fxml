@@ -51,8 +51,8 @@
                         <Insets bottom="10.0" left="30.0" right="30.0" top="10.0" />
                      </VBox.margin>
                      <children>
-                        <ProgressIndicator fx:id="pi" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" prefHeight="50.0" prefWidth="50.0" progress="0.0" />
-                        <ImageView fx:id="imageNotOk" fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                        <ProgressIndicator fx:id="pi" maxHeight="50.0" maxWidth="50.0" minHeight="50.0" minWidth="50.0" prefHeight="50.0" prefWidth="50.0" progress="0.0" visible="false" />
+                        <ImageView fx:id="imageNotOk" fitHeight="30.0" fitWidth="30.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../images/NotOkGray30.png" />
                            </image>
@@ -66,21 +66,49 @@
             </VBox>
          </children>
       </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
+      <HBox prefHeight="80.0" prefWidth="200.0">
          <children>
-            <TextField fx:id="sid" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="Database SID" />
+            <VBox maxHeight="80.0" maxWidth="365.0" minHeight="80.0" minWidth="365.0" prefHeight="80.0" prefWidth="365.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
+                     <children>
+                        <TextField fx:id="sid" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="Database SID" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="15.0" right="5.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
+                     <children>
+                        <TextField fx:id="user" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="DB User" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="15.0" right="5.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
+            <VBox prefHeight="80.0" prefWidth="143.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <VBox.margin>
+                        <Insets left="20.0" right="15.0" />
+                     </VBox.margin>
+                     <children>
+                        <RadioButton fx:id="oracle" mnemonicParsing="false" text="Oracle" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <RadioButton fx:id="mysql" mnemonicParsing="false" text="MySQL" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="20.0" right="15.0" />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
-         <VBox.margin>
-            <Insets left="15.0" right="5.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
-         <children>
-            <TextField fx:id="user" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="DB User" />
-         </children>
-         <VBox.margin>
-            <Insets left="15.0" right="5.0" />
-         </VBox.margin>
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
          <VBox.margin>

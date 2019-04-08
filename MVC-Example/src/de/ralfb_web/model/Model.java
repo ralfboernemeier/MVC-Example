@@ -1,5 +1,7 @@
 package de.ralfb_web.model;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -21,6 +23,9 @@ public class Model {
 	private String dbConnectString;
 	private StringProperty dbVersionProperty = new SimpleStringProperty();
 	private StringProperty jdbcDriverVersionProperty = new SimpleStringProperty();
+	private StringProperty dbVendor = new SimpleStringProperty();
+	private BooleanProperty exceptionOccured = new SimpleBooleanProperty(false);
+
 
 	/**
 	 * Constructor
@@ -105,6 +110,24 @@ public class Model {
 
 	public void setJdbcDriverVersionProperty(String jdbcDriverVersion) {
 		this.jdbcDriverVersionProperty.set(jdbcDriverVersion);
+	}
+	
+	public StringProperty getDbVendor() {
+		return dbVendor;
+	}
+
+
+	public void setDbVendor(String dbVendor) {
+		this.dbVendor.setValue(dbVendor);
+	}
+	
+	public BooleanProperty getExceptionOccured() {
+		return exceptionOccured;
+	}
+
+
+	public void setExceptionOccured(Boolean exceptionOccured) {
+		this.exceptionOccured.setValue(exceptionOccured);
 	}
 
 }

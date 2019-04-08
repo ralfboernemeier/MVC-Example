@@ -2,7 +2,6 @@ package de.ralfb_web.services;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,6 +16,12 @@ public class DAOService {
 	private ExceptionListener exceptionListener;
 	private String dbVersionInfo;
 	private String jdbcDriverVersionInfo;
+	private String versionInfos;
+	private Connection conn;
+	private Statement stmt;
+	private ResultSet rset;
+	
+	
 
 	/**
 	 * Constructor
@@ -42,7 +47,7 @@ public class DAOService {
 	}
 
 	/**
-	 * Method to fire an exception using exceptionOcuured() method
+	 * Method to fire an exception using exceptionOccured() method
 	 * 
 	 * @param th Throwable
 	 */
@@ -52,56 +57,84 @@ public class DAOService {
 		}
 	}
 
-	public String getDbVersionInfo(String dbConnectString, String dbUserId, String dbPassword) {
+	public String getDbVersionInfo(String dbVendor, String user, String passwd, String host, int port, String sid) {
+		String queryGetDbVersion = null;
 		try {
-			Connection conn = DriverManager.getConnection(dbConnectString, dbUserId, dbPassword);
-			String queryGetDbVersion = "select banner from v$version where banner like '%Oracle%'";
-			Statement stmtQueryGetDbVersion = conn.createStatement();
-			ResultSet rsetGetDbVersion = stmtQueryGetDbVersion.executeQuery(queryGetDbVersion);
-			if (rsetGetDbVersion.next()) {
-				dbVersionInfo = rsetGetDbVersion.getString("BANNER");
+			switch (dbVendor) {
+			case "Oracle":
+				DataSourceOracle dso = new DataSourceOracle(user, passwd, host, port, sid);
+				conn = dso.getOracleDataSource().getConnection();
+				queryGetDbVersion = "select banner from v$version where banner like '%Oracle%'";
+				break;
+				
+			case "MySQL":
+				DataSourceMySQL dsm = new DataSourceMySQL(user, passwd, host, port, sid);
+				conn = dsm.getMysqlDataSource().getConnection();
+				queryGetDbVersion = "SELECT VERSION()";
+				break;
+			default:
+				break;
 			}
-			stmtQueryGetDbVersion.close();
-			conn.close();
-		} catch (SQLException ex) {
-			fireException(ex);
-			return null;
-		}
-		return dbVersionInfo;
-	}
-	
-	public String getDbVersionInfo2(String user, String passwd, String host, int port, String sid) {
-		try {
-			DataSourceOracle dso = new DataSourceOracle(user, passwd, host, port, sid);
-			Connection conn = dso.getOracleDataSource().getConnection();
-			String queryGetDbVersion = "select banner from v$version where banner like '%Oracle%'";
-			Statement stmtQueryGetDbVersion = conn.createStatement();
-			ResultSet rsetGetDbVersion = stmtQueryGetDbVersion.executeQuery(queryGetDbVersion);
-			if (rsetGetDbVersion.next()) {
-				dbVersionInfo = rsetGetDbVersion.getString("BANNER");
-			}
-			rsetGetDbVersion.close();
-			rsetGetDbVersion = null;
-			stmtQueryGetDbVersion.close();
-			stmtQueryGetDbVersion = null;
-			conn.close();
-			conn = null;
-		} catch (SQLException ex) {
-			fireException(ex);
-			return null;
-		}
-		return dbVersionInfo;
-	}
-	
-	public String getJdbcDriverVersionInfo(String dbConnectString, String dbUserId, String dbPassword) {
-		try {
-			Connection conn = DriverManager.getConnection(dbConnectString, dbUserId, dbPassword);
 			DatabaseMetaData metaData = conn.getMetaData();
 			jdbcDriverVersionInfo = metaData.getDriverVersion();
+			Statement stmt = conn.createStatement();
+			ResultSet rset = stmt.executeQuery(queryGetDbVersion);
+			if (rset.next()) {
+				dbVersionInfo = rset.getString(1);
+			}
+			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\nOracle Database Version: " + dbVersionInfo;
 		} catch (SQLException ex) {
 			fireException(ex);
 			return null;
 		}
-		return jdbcDriverVersionInfo;
+		finally {
+			close();
+		}
+		return versionInfos;
+	}
+		
+	public String getMySqlVersion(String user, String passwd, String host, int port, String db) {
+		try {
+			DataSourceMySQL dsm = new DataSourceMySQL(user, passwd, host, port, db);
+			conn = dsm.getMysqlDataSource().getConnection();
+			DatabaseMetaData metaData = conn.getMetaData();
+			jdbcDriverVersionInfo = metaData.getDriverVersion();
+			String querygetMySqlVersion = "SELECT VERSION()";
+			Statement stmt = conn.createStatement();
+			ResultSet rset = stmt.executeQuery(querygetMySqlVersion);
+			if (rset.next()) {
+				dbVersionInfo = rset.getString(1);
+			}
+			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\nMySQL Database Version: " + dbVersionInfo;
+			
+		} catch (Exception ex) {
+			fireException(ex);
+			return null;
+		}
+		finally {
+			close();
+		}
+		return versionInfos;
+	}
+	
+	public void close() {
+		try {
+			if (rset != null) {
+				rset.close();
+				rset = null;
+			}
+			if (stmt != null) {
+				stmt.close();
+				stmt = null;
+			}
+			if (conn != null) {
+				conn.close();
+				conn = null;
+			}
+			
+		} catch (Exception ex) {
+			fireException(ex);
+		}
+		
 	}
 }
