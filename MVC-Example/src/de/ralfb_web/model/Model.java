@@ -16,14 +16,16 @@ public class Model {
 	 * Fields
 	 */
 	private String host;
-	private String port;
+	private String port = "1521";
 	private String user;
 	private String password;
 	private String sid;
 	private String dbConnectString;
+
 	private StringProperty dbVersionProperty = new SimpleStringProperty();
 	private StringProperty jdbcDriverVersionProperty = new SimpleStringProperty();
 	private StringProperty dbVendor = new SimpleStringProperty();
+	private StringProperty sqLiteDbFileFullPathName = new SimpleStringProperty();
 	private BooleanProperty exceptionOccured = new SimpleBooleanProperty(false);
 
 
@@ -128,6 +130,15 @@ public class Model {
 
 	public void setExceptionOccured(Boolean exceptionOccured) {
 		this.exceptionOccured.setValue(exceptionOccured);
+	}
+	
+	public StringProperty getSqLiteDbFileFullPathName() {
+		return sqLiteDbFileFullPathName;
+	}
+
+
+	public void setSqLiteDbFileFullPathName(String sqLiteDbFileFullPathName) {
+		this.sqLiteDbFileFullPathName.setValue(sqLiteDbFileFullPathName);
 	}
 
 }

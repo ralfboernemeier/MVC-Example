@@ -27,10 +27,6 @@ public class DataSourceMySQL {
 		mds.setUrl("jdbc:mysql://" + host + ":" + port + "/" + db + "?allowMultiQueries=true&useSSL=false");
 		mds.setUser(user);
 		mds.setPassword(passwd);
-//		mds.setServerName(host);
-//		mds.setPort(port);
-//		mds.setDatabaseName(db);
-
 		return mds;
 	}
 

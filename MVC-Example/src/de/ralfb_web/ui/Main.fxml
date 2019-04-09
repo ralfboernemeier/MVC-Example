@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox prefHeight="400.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ralfb_web.ui.MainController">
+<VBox prefHeight="450.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.ralfb_web.ui.MainController">
    <children>
       <HBox alignment="CENTER" prefHeight="40.0" prefWidth="478.0">
          <children>
@@ -72,7 +72,7 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
                      <children>
-                        <TextField fx:id="sid" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="Database SID" />
+                        <TextField fx:id="sid" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="Database" />
                      </children>
                      <VBox.margin>
                         <Insets left="15.0" right="5.0" />
@@ -106,6 +106,14 @@
                         <Insets left="20.0" right="15.0" />
                      </VBox.margin>
                   </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <RadioButton fx:id="sqlite" mnemonicParsing="false" text="SQLite" />
+                     </children>
+                     <VBox.margin>
+                        <Insets left="20.0" right="15.0" />
+                     </VBox.margin>
+                  </HBox>
                </children>
             </VBox>
          </children>
@@ -116,6 +124,14 @@
          </VBox.margin>
          <children>
             <PasswordField fx:id="password" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" prefHeight="30.0" prefWidth="350.0" promptText="DB User Password" />
+         </children>
+      </HBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
+         <VBox.margin>
+            <Insets left="15.0" right="5.0" />
+         </VBox.margin>
+         <children>
+            <TextField fx:id="sqliteDbPath" disable="true" maxHeight="30.0" maxWidth="350.0" minHeight="30.0" minWidth="350.0" opacity="0.25" prefHeight="30.0" prefWidth="350.0" promptText="SQLite Database Absolute Path" />
          </children>
       </HBox>
       <HBox alignment="CENTER_LEFT" maxHeight="100.0" maxWidth="480.0" minHeight="100.0" minWidth="480.0" prefHeight="100.0" prefWidth="480.0">

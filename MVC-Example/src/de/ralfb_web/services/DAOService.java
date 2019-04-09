@@ -20,6 +20,7 @@ public class DAOService {
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet rset;
+	
 
 	/**
 	 * Constructor
@@ -55,7 +56,7 @@ public class DAOService {
 		}
 	}
 
-	public String getDbVersionInfo(String dbVendor, String user, String passwd, String host, int port, String sid) {
+	public String getDbVersionInfo(String dbVendor, String user, String passwd, String host, int port, String sid, String dbLocation) {
 		String queryGetDbVersion = null;
 		try {
 			switch (dbVendor) {
@@ -64,11 +65,15 @@ public class DAOService {
 				conn = dso.getOracleDataSource().getConnection();
 				queryGetDbVersion = "select banner from v$version where banner like '%Oracle%'";
 				break;
-
 			case "MySQL":
 				DataSourceMySQL dsm = new DataSourceMySQL(user, passwd, host, port, sid);
 				conn = dsm.getMysqlDataSource().getConnection();
 				queryGetDbVersion = "SELECT VERSION()";
+				break;
+			case "SQLite":
+				DataSourceSQLite sDataSourceSQLite = new DataSourceSQLite(dbLocation);
+				conn = sDataSourceSQLite.getSQLiteDataSource().getConnection();
+				queryGetDbVersion = "select sqlite_version()";
 				break;
 			default:
 				break;
@@ -80,7 +85,7 @@ public class DAOService {
 			if (rset.next()) {
 				dbVersionInfo = rset.getString(1);
 			}
-			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\nDatabase Version: " + dbVersionInfo;
+			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\n" + dbVendor + " Database Version: " + dbVersionInfo;
 		} catch (SQLException ex) {
 			fireException(ex);
 			return null;
