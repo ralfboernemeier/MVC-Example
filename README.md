@@ -28,13 +28,15 @@ my.package.model
     Model
 my.package.services
     DAOService
+    DataSourceOracle
+    DataSourceMySQL
+    DataSourceSQLite
 my.package.ui
     MainController
     Main.fxml    
 my.package.utils
     ControllerFactory
     ViewLoader
-    ControllerInjectable(Interface)
     ModelInjectable (Interface)
     DAOServiceInjectable (Interface)
     ExceptionListener (Interface)
