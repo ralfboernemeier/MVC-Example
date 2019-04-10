@@ -20,7 +20,6 @@ public class DAOService {
 	private Connection conn;
 	private Statement stmt;
 	private ResultSet rset;
-	
 
 	/**
 	 * Constructor
@@ -56,7 +55,8 @@ public class DAOService {
 		}
 	}
 
-	public String getDbVersionInfo(String dbVendor, String user, String passwd, String host, int port, String sid, String dbLocation) {
+	public String getDbVersionInfo(String dbVendor, String user, String passwd, String host, int port, String sid,
+			String dbLocation) {
 		String queryGetDbVersion = null;
 		try {
 			switch (dbVendor) {
@@ -85,7 +85,8 @@ public class DAOService {
 			if (rset.next()) {
 				dbVersionInfo = rset.getString(1);
 			}
-			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\n" + dbVendor + " Database Version: " + dbVersionInfo;
+			versionInfos = "JDBC Version: " + jdbcDriverVersionInfo + "\n" + dbVendor + " Database Version: "
+					+ dbVersionInfo;
 		} catch (SQLException ex) {
 			fireException(ex);
 			return null;

@@ -12,7 +12,7 @@ public class DataSourceOracle {
 	private String host;
 	private int port;
 	private String sid;
-	
+
 	public DataSourceOracle(String user, String passwd, String host, int port, String sid) {
 		super();
 		this.user = user;
@@ -22,7 +22,7 @@ public class DataSourceOracle {
 		this.sid = sid;
 	}
 
-	public OracleDataSource getOracleDataSource () throws SQLException {
+	public OracleDataSource getOracleDataSource() throws SQLException {
 		ods = new OracleDataSource();
 		ods.setDriverType("thin");
 		ods.setUser(user);

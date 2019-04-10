@@ -1,5 +1,7 @@
 package de.ralfb_web.ui;
 
+import java.io.File;
+
 import de.ralfb_web.model.Model;
 import de.ralfb_web.services.DAOService;
 import de.ralfb_web.utils.DAOServiceInjectable;
@@ -24,6 +26,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
@@ -43,6 +47,7 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	 */
 	private Model model;
 	private DAOService dao;
+	final FileChooser sqliteDbFileChooser = new FileChooser();
 
 	@Override
 	public void setDAO(DAOService dao) {
@@ -124,9 +129,40 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 		});
 
 		// Add a Listener to the BooleanProperty getExceptionOccured.
+		// If Exception occurred set Image to NotOK
 		model.getExceptionOccured().addListener((observable, oldValue, newValue) -> {
 			if (newValue) {
 				setFadeTransitionLabelErrorStatus(true);
+			}
+		});
+
+		// Add a Listener to the StringProperty dbVendor and decide which TextFields
+		// have to be enabled.
+		model.getDbVendor().addListener((observable, oldValue, newValue) -> {
+			if (newValue.equals("SQLite")) {
+				disableOracleMySQLFields(true);
+			} else if (newValue.equals("Oracle") || newValue.equals("MySQL")) {
+				disableOracleMySQLFields(false);
+			}
+		});
+
+		// Add a Listener to the TextField to recognize changes and set the value in the
+		// model
+		sqliteDbPath.textProperty().addListener((observable, oldValue, newValue) -> {
+			model.setSqLiteDbFileFullPathName(newValue);
+		});
+
+		// If TextField sqlietDbPath is clicked open a FileChooser Dialog to select DB
+		// full path name to SQLite Database
+		sqliteDbPath.setOnMouseClicked(new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				configuringFileChooser(sqliteDbFileChooser);
+				File sqliteDbFileFullPathName = sqliteDbFileChooser.showOpenDialog(sqliteDbPath.getScene().getWindow());
+				if (sqliteDbFileFullPathName != null) {
+					sqliteDbPath.setText(sqliteDbFileFullPathName.getAbsolutePath());
+				}
 			}
 		});
 
@@ -174,6 +210,9 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	@FXML
 	RadioButton sqlite;
 
+	@FXML
+	TextField sqliteDbPath;
+
 	/**
 	 * Initialize and set FadeTransition Objects. The FadTransition will be used to
 	 * overlay the ProgressIndicator with an image that indicates an error in case
@@ -218,6 +257,44 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 			ParallelTransition pt = new ParallelTransition(fade1, fade2);
 			pt.play();
 		}
+	}
+
+	public void disableOracleMySQLFields(Boolean value) {
+		if (value) {
+			host.setOpacity(0.25);
+			host.setDisable(true);
+			port.setOpacity(0.25);
+			port.setDisable(true);
+			sid.setOpacity(0.25);
+			sid.setDisable(true);
+			user.setOpacity(0.25);
+			user.setDisable(true);
+			password.setOpacity(0.25);
+			password.setDisable(true);
+			sqliteDbPath.setOpacity(1);
+			sqliteDbPath.setDisable(false);
+		} else {
+			host.setOpacity(1);
+			host.setDisable(false);
+			port.setOpacity(1);
+			port.setDisable(false);
+			sid.setOpacity(1);
+			sid.setDisable(false);
+			user.setOpacity(1);
+			user.setDisable(false);
+			password.setOpacity(1);
+			password.setDisable(false);
+			sqliteDbPath.setOpacity(0.25);
+			sqliteDbPath.setDisable(true);
+		}
+	}
+
+	private void configuringFileChooser(FileChooser fileChooser) {
+		// Set title for FileChooser
+		fileChooser.setTitle("Select SQLite Database File");
+
+		// Set Initial Directory
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 	}
 
 	/**
@@ -272,7 +349,8 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 				protected String call() throws Exception {
 					// Start entering execution code here ...
 					model.setDbVersionProperty(dao.getDbVersionInfo(model.getDbVendor().getValue(), model.getUser(),
-							model.getPassword(), model.getHost(), Integer.parseInt(model.getPort()), model.getSid()));
+							model.getPassword(), model.getHost(), Integer.parseInt(model.getPort()), model.getSid(),
+							model.getSqLiteDbFileFullPathName().getValue()));
 					if (model.getDbVersionProperty().getValue() == null) {
 						serviceWorkerTask1.onFailedProperty();
 					}
@@ -289,12 +367,14 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 				@Override
 				protected void cancelled() {
 					super.cancelled();
+					setFadeTransitionLabelErrorStatus(true);
 					updateMessage("Cancelled!");
 				}
 
 				@Override
 				protected void failed() {
 					super.failed();
+					setFadeTransitionLabelErrorStatus(true);
 					updateMessage("Failed!");
 				}
 			};

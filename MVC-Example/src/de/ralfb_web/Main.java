@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 
 /**
  * Main Class MVC-Example Application
+ * 
  * @author Ralf Boernemeier
  * @version 1.0
  * @since 2019-03-27
