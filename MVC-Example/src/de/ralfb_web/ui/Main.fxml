@@ -144,10 +144,10 @@
       </HBox>
       <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="478.0">
          <children>
-            <Button fx:id="connectDB" mnemonicParsing="false" onAction="#connectButtonTapped" text="Connect Database" />
-            <Button fx:id="exit" mnemonicParsing="false" onAction="#exitButtonTapped" text="EXIT">
+            <Button fx:id="connectDB" mnemonicParsing="false" onAction="#connectButtonTapped" prefHeight="25.0" prefWidth="165.0" text="Connect Database" />
+            <Button fx:id="exit" mnemonicParsing="false" onAction="#exitButtonTapped" prefHeight="25.0" prefWidth="72.0" text="EXIT">
                <HBox.margin>
-                  <Insets left="325.0" />
+                  <Insets left="300.0" />
                </HBox.margin>
             </Button>
          </children>
