@@ -147,7 +147,7 @@
             <Button fx:id="connectDB" mnemonicParsing="false" onAction="#connectButtonTapped" prefHeight="25.0" prefWidth="165.0" text="Connect Database" />
             <Button fx:id="exit" mnemonicParsing="false" onAction="#exitButtonTapped" prefHeight="25.0" prefWidth="72.0" text="EXIT">
                <HBox.margin>
-                  <Insets left="300.0" />
+                  <Insets left="290.0" />
                </HBox.margin>
             </Button>
          </children>
