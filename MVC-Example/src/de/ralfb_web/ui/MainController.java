@@ -1,9 +1,13 @@
 package de.ralfb_web.ui;
 
 import java.io.File;
+import java.io.InputStream;
+
+import java.util.Properties;
 
 import de.ralfb_web.model.Model;
 import de.ralfb_web.services.DAOService;
+import de.ralfb_web.utils.Crypt;
 import de.ralfb_web.utils.DAOServiceInjectable;
 import de.ralfb_web.utils.ExceptionListener;
 import de.ralfb_web.utils.ModelInjectable;
@@ -40,6 +44,16 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	public MainController() {
 		super();
 		serviceWorkerTask1.messageProperty().addListener((obs, oldMsg, newMsg) -> messages.appendText(newMsg + "\n"));
+		try {
+			InputStream in = MainController.class.getResourceAsStream("default.properties");
+			this.defaultProps = new Properties();
+			defaultProps.load(in);
+			in.close();
+		} catch (Exception ex) {
+			String msg = String.valueOf(ex);
+			messages.appendText(msg + "\n");
+		}
+
 	}
 
 	/**
@@ -48,6 +62,7 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 	private Model model;
 	private DAOService dao;
 	final FileChooser sqliteDbFileChooser = new FileChooser();
+	private Properties defaultProps;
 
 	@Override
 	public void setDAO(DAOService dao) {
@@ -141,6 +156,7 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 		model.getDbVendor().addListener((observable, oldValue, newValue) -> {
 			if (newValue.equals("SQLite")) {
 				disableOracleMySQLFields(true);
+				sqliteDbPath.setText(defaultProps.getProperty("sqlitedb"));
 			} else if (newValue.equals("Oracle") || newValue.equals("MySQL")) {
 				disableOracleMySQLFields(false);
 			}
@@ -165,6 +181,13 @@ public class MainController implements ExceptionListener, ModelInjectable, DAOSe
 				}
 			}
 		});
+
+		// Use the value from default.properties to set the TextFiled default values.
+		user.setText(defaultProps.getProperty("user"));
+		host.setText(defaultProps.getProperty("host"));
+		port.setText(defaultProps.getProperty("port"));
+		sid.setText(defaultProps.getProperty("db"));
+		password.setText(Crypt.decrypt(defaultProps.getProperty("password"), defaultProps.getProperty("secretkey")));
 
 	}
 
